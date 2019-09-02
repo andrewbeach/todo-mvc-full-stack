@@ -4,14 +4,15 @@ module TodoMvc.Data.User
   , userId
   ) where
 
-import Prelude
+import Data.Newtype (class Newtype, wrap)
+import Simple.JSON (class ReadForeign)
 
 newtype UserId = UserId Int
-instance showUserId :: Show UserId where
-  show (UserId i) = "<User" <> show i <> ">"
+derive instance newTypeUserId :: Newtype UserId _
+derive newtype instance readForeignUserId :: ReadForeign UserId
 
 userId :: Int -> UserId
-userId = UserId
+userId = wrap
 
 type User =
   { id :: UserId

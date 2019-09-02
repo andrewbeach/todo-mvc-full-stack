@@ -2,13 +2,10 @@ module Main where
 
 import Prelude
 
-import Data.Argonaut.Core (stringify)
 import Effect (Effect)
-import Effect.Aff (launchAff_)
-import Effect.Class (liftEffect)
 import Effect.Console (log)
 import TodoMvc.Api as Api
-import TodoMvc.Data.Todo (decodeTodo, encodeTodo, todoId)
+import TodoMvc.Data.Todo (encodeTodo, todoId)
 
 main :: Effect Unit
 main = do

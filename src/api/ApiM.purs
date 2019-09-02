@@ -2,14 +2,16 @@ module TodoMvc.Api.ApiM where
 
 import Prelude
 
-import Control.Monad.Reader.Trans (class MonadAsk, ReaderT, ask, asks, runReaderT)
-import Data.Maybe (Maybe(..))
+import Control.Monad.Reader.Trans
+  (class MonadAsk, ReaderT, ask, asks, runReaderT)
+import Data.Maybe (Maybe)
 import Database.Postgres as Pg
 import Effect.Aff.Class (class MonadAff)
 import Effect.Class (class MonadEffect, liftEffect)
 import Effect.Ref (Ref, read)
 import Node.Express.Handler (HandlerM)
-import TodoMvc.Api.Capability (class ManageTodo, class UsePool, getPool)
+import TodoMvc.Api.Capability
+  (class ManageTodo, class ManageUser, class UsePool)
 import TodoMvc.Api.Database as Db
 import Type.Equality (class TypeEquals, from)
 
@@ -35,16 +37,13 @@ instance usePoolApiM :: UsePool ApiM where
     env <- ask
     liftEffect $ read env.pool
 
-runQuery :: forall m f a. UsePool m => (Pool -> m (f a)) -> f a -> m (f a)
-runQuery query default = do
-  pool <- getPool
-  case pool of
-    (Just p) -> query p
-    Nothing -> pure default
-
 instance manageTodoApiM :: ManageTodo ApiM where
-  getTodo id = runQuery (Db.getTodo id) Nothing
-  getTodos = runQuery Db.getTodos []
+  getTodo id = Db.getTodo id
+  getTodos = Db.getTodos
+
+instance manageUserApiM :: ManageUser ApiM where
+  getUser id = Db.getUser id
+  getUsers = Db.getUsers
 
 runApiM :: ApiEnv -> ApiM ~> HandlerM
 runApiM env (ApiM m) = runReaderT m env

@@ -27,8 +27,8 @@ todoId :: Int -> TodoId
 todoId = wrap
 
 derive instance newTypeTodoId :: Newtype TodoId _
-derive instance eqTodoId :: Eq TodoId
-derive instance ordTodoId :: Ord TodoId
+derive newtype instance eqTodoId :: Eq TodoId
+derive newtype instance ordTodoId :: Ord TodoId
 
 instance arbitraryTodoId :: Arbitrary TodoId where
   arbitrary = todoId <$> chooseInt 1 1000

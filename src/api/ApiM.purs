@@ -5,7 +5,7 @@ import Prelude
 import Control.Monad.Reader.Trans
   (class MonadAsk, ReaderT, ask, asks, runReaderT)
 import Data.Maybe (Maybe)
-import Database.Postgres as Pg
+import Database.Postgres (Pool)
 import Effect.Aff.Class (class MonadAff)
 import Effect.Class (class MonadEffect, liftEffect)
 import Effect.Ref (Ref, read)
@@ -14,8 +14,6 @@ import TodoMvc.Api.Capability
   (class ManageTodo, class ManageUser, class UsePool)
 import TodoMvc.Api.Database as Db
 import Type.Equality (class TypeEquals, from)
-
-type Pool = Pg.Pool
 
 type ApiEnv =
   { pool :: Ref (Maybe Pool) }
@@ -38,6 +36,7 @@ instance usePoolApiM :: UsePool ApiM where
     liftEffect $ read env.pool
 
 instance manageTodoApiM :: ManageTodo ApiM where
+  createTodo = Db.createTodo
   getTodo id = Db.getTodo id
   getTodos = Db.getTodos
 

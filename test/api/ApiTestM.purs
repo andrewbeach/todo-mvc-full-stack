@@ -34,8 +34,9 @@ testTodo2 =
   }
 
 instance manageTodoApiTestM :: ManageTodo ApiTestM where
+  createTodo uid todo = pure $ Just $ testTodo1.id
   getTodo id = pure $ Just testTodo1
-  getTodos = pure $ [ testTodo1, testTodo2 ]
+  getTodos uid = pure $ [ testTodo1, testTodo2 ]
 
 runApiTestM :: TestEnv -> ApiTestM ~> HandlerM
 runApiTestM env (ApiTestM m) = runReaderT m env

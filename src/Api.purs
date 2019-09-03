@@ -7,12 +7,13 @@ import Effect (Effect)
 import Effect.Class (liftEffect)
 import Effect.Console (log)
 import Effect.Ref (new)
-import Node.Express.App (App)
+import Node.Express.App (App, useExternal)
 import Node.HTTP (Server)
 import TodoMvc.Api.ApiM (runApiM)
 import TodoMvc.Api.Database as Db
 import TodoMvc.Api.Routes as Routes
 import TodoMvc.Api.Server (serve)
+import TodoMvc.Util.Externs (jsonBodyParser)
 
 -- | Production express app (using ApiM)
 -- | Test express app can be set up with a TestApiM
@@ -22,6 +23,7 @@ app = do
   mpool <- Db.mkPool Db.defaultClientConfig Db.defaultPoolConfig
   pool <- liftEffect $ new $ Just mpool
   let env = { pool }
+  useExternal jsonBodyParser
   Routes.todos runApiM env
   Routes.users runApiM env
 

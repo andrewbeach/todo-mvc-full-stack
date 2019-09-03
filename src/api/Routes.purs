@@ -4,8 +4,6 @@ import Prelude
 
 import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..))
-import Effect.Class (liftEffect)
-import Effect.Console (log)
 import Node.Express.App (App, get, post)
 import Node.Express.Handler (Handler, HandlerM)
 import Node.Express.Request (getBodyParam, getRouteParam)
@@ -15,6 +13,8 @@ import TodoMvc.Api.Capability
 import TodoMvc.Data.Todo (todoId)
 import TodoMvc.Data.User (userId)
 import TodoMvc.Util.Int (parseInt)
+
+-- TODO: make types more friendly here
 
 type ApiRunner m env = Functor m => env -> m ~> HandlerM
 type ApiHandler m = forall env. ApiRunner m env -> env -> Handler
@@ -29,7 +29,6 @@ type HandleRoutes m = forall e. ApiRunner m e -> e -> App
 
 createTodoHandler :: TodoHandler
 createTodoHandler runM env = do
-  _ <- liftEffect $ log "creating todo"
   todo <- getBodyParam "todo"
   uid <- getRouteParam "id"
   case Tuple uid todo of

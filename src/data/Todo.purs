@@ -4,8 +4,8 @@ module TodoMvc.Data.Todo
   , TodoMetadataRep
   , TodoRep
   , TodoWithMetadata
-  , decodeTodo
-  , encodeTodo
+  -- , decodeTodo
+  -- , encodeTodo
   , todoId
   ) where
 
@@ -19,6 +19,7 @@ import Data.Newtype (class Newtype, wrap)
 import Simple.JSON (class ReadForeign)
 import Test.QuickCheck (class Arbitrary)
 import Test.QuickCheck.Gen (chooseInt)
+import TodoMvc.Data.User (UserId)
 import Type.Row (type (+))
 
 newtype TodoId = TodoId Int
@@ -51,14 +52,15 @@ type TodoRep row =
 
 type TodoMetadataRep row =
   ( id :: TodoId
+  , userId :: UserId
   | row
   )
 
 type Todo = { | TodoRep () }
 type TodoWithMetadata = { | TodoRep + TodoMetadataRep () }
 
-decodeTodo :: Json -> Either String TodoWithMetadata
-decodeTodo = decodeJson
+-- decodeTodo :: Json -> Either String TodoWithMetadata
+-- decodeTodo = decodeJson
 
-encodeTodo :: TodoWithMetadata -> Json
-encodeTodo = encodeJson
+-- encodeTodo :: TodoWithMetadata -> Json
+-- encodeTodo = encodeJson

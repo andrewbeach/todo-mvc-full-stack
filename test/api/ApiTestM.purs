@@ -7,6 +7,7 @@ import Data.Maybe (Maybe(..))
 import Node.Express.Handler (HandlerM)
 import TodoMvc.Api.Capability (class ManageTodo)
 import TodoMvc.Data.Todo (TodoWithMetadata, todoId)
+import TodoMvc.Data.User (userId)
 import Type.Equality (class TypeEquals, from)
 
 type TestEnv = { }
@@ -25,12 +26,14 @@ testTodo1 :: TodoWithMetadata
 testTodo1 =
   { id: todoId 12345
   , title: "Test Todo"
+  , userId: userId 1
   }
 
 testTodo2 :: TodoWithMetadata
 testTodo2 =
   { id: todoId 54321
   , title: "Another one"
+  , userId: userId 1
   }
 
 instance manageTodoApiTestM :: ManageTodo ApiTestM where

@@ -47,15 +47,18 @@ withPool default f = do
 
 -- Todos
 
+-- TODO: Make these more ergonomic. Having to escape to get camelCase seems wrong
+--   (and caused hard-to-debug runtime errors)
+-- "Make incorrect states impossible"
 getTodo :: forall m. UsePool m => TodoId -> m (Maybe TodoWithMetadata)
 getTodo id = withPool Nothing \c -> do
-  let query = PG.Query "SELECT * from todos WHERE id = $1"
+  let query = PG.Query "SELECT id, user_id AS \"userId\", title FROM todos WHERE id = $1"
       params = [ toSql $ unwrap id ]
   PG.queryOne read' query params c
 
 getTodos :: forall m. UsePool m => UserId -> m (Array TodoWithMetadata)
 getTodos userId = withPool [] \c -> do
-  let query = PG.Query "SELECT * from todos WHERE user_id = $1"
+  let query = PG.Query "SELECT id, user_id AS \"userId\", title FROM todos WHERE user_id = $1"
       params = [ toSql $ unwrap userId ]
   PG.query read' query params c
 
